@@ -14,6 +14,7 @@ using RunCmd.Common.Messaging;
 using RunCmd.Common.Helpers;
 using System.Windows.Navigation;
 using System.Collections.ObjectModel;
+using System.Collections;
 
 namespace RunCmd.ViewModels
 {
@@ -80,6 +81,20 @@ namespace RunCmd.ViewModels
                     OnPropertyChanged("IsCustomExe");
                 }
                 }
+        }
+
+        public bool IsCmdRunning
+        {
+            get { return _isCmdRunning; }
+            set {
+                if (_isCmdRunning != value)
+                {
+                    _isCmdRunning = value;
+                    OnPropertyChanged("IsCmdRunning");
+                }
+            
+            
+            }
         }
 
 
@@ -157,14 +172,7 @@ namespace RunCmd.ViewModels
 
         private bool CanSelectedBatFile(object obj)
         {
-            if (!_isCmdRunning)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return (!IsCmdRunning);
         }
 
         private void ExecSelectedBatFile(object obj)
@@ -174,7 +182,7 @@ namespace RunCmd.ViewModels
 
         private bool CanStopCmd(object obj)
         {
-            return (_isCmdRunning);
+            return (IsCmdRunning);
         }
 
         private void ExecStopCmd(object obj)
@@ -257,19 +265,25 @@ namespace RunCmd.ViewModels
 
                 string strCmdArgs = " ";
 
-                if (!string.IsNullOrWhiteSpace(CmdText))
-                {
-                    List<string> cmdArgs = new List<string>(CmdText.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries));
-                    foreach (string cmdarg in cmdArgs)
-                    {
-                        strCmdArgs += cmdarg + " ";
-                    }
-                }
-
                 if (ExeFileName.Equals("cmd.exe", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    strCmdArgs = " /C " + strCmdArgs;
+                    strCmdArgs += " /C ";
                 }
+
+                strCmdArgs += CmdText;
+
+                //if (!string.IsNullOrWhiteSpace(CmdText))
+                //{
+                //    List<string> cmdArgs = new List<string>(CmdText.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+                //    var hs= GetCommandLineArgs(cmdArgs.ToArray());
+
+                //    foreach (string key in hs.Keys)
+                //    {
+                //        strCmdArgs += key + " " + hs[key];
+                //    }
+                //}
+
+
 
                 _process = new Process();
                 _process.StartInfo = new ProcessStartInfo(ExeFileName)
@@ -300,17 +314,44 @@ namespace RunCmd.ViewModels
                     _workerThread = new Thread(ths);
                     _workerThread.IsBackground = true;
                     _workerThread.Start();
-                    _isCmdRunning = true;
+                    IsCmdRunning = true;
 
 
-                    _workerThread.Join();
-                _isCmdRunning = false;
+                _workerThread.Join();
+                IsCmdRunning = false;
 
             }
             catch (Exception exc)
             {
                 throw (exc);
             }
+        }
+
+        private Hashtable GetCommandLineArgs(string[] args) {
+            Hashtable CommandLineArgs = new Hashtable();
+            // Don't bother if no command line args were passed
+            // NOTE: e.Args is never null - if no command line args were passed, 
+            //       the length of e.Args is 0.
+            if (args.Length==0) { return (null); }
+
+            // Parse command line args for args in the following format:
+            //   /argname:argvalue /argname:argvalue /argname:argvalue ...
+            //
+            // Note: This sample uses regular expressions to parse the command line arguments.
+            // For regular expressions, see:
+            // http://msdn.microsoft.com/library/en-us/cpgenref/html/cpconRegularExpressionsLanguageElements.asp
+            string pattern = @"(?<argname>/\w+):(?<argvalue>\w+)";
+            foreach (string arg in args)
+            {
+                System.Text.RegularExpressions.Match match = System.Text.RegularExpressions.Regex.Match(arg, pattern);
+
+                // If match not found, command line args are improperly formed.
+                if (!match.Success) throw new ArgumentException("The command line arguments are improperly formed. Use /argname:argvalue.");
+
+                // Store command line arg and value
+                CommandLineArgs[match.Groups["argname"].Value] = match.Groups["argvalue"].Value;
+            }
+            return (CommandLineArgs);
         }
 
         private void AppendError(string text)
@@ -325,7 +366,7 @@ namespace RunCmd.ViewModels
         private void BuildCompleted(object sender, EventArgs args)
         {
             Process proc = (Process)sender;
-            _isCmdRunning = false;
+            IsCmdRunning = false;
             if (proc.ExitCode!=0)
             {
                 string erTxt = string.Format("[ERROR] Process exited with error! Exit Code: {0} [ERROR]", proc.ExitCode);
@@ -377,7 +418,7 @@ namespace RunCmd.ViewModels
         private bool CanRunCmd(object obj)
         {
             //Enable the Button only if the mandatory fields are filled
-            if ((CmdText != string.Empty)&&(!_isCmdRunning))
+            if ((!string.IsNullOrWhiteSpace(CmdText))&&(!IsCmdRunning))
                 return true;
             return false;
         }
