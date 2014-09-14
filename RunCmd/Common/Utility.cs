@@ -120,5 +120,25 @@ namespace RunCmd.Common
         {
             File.Delete(fullFileName);
         }
+
+        internal static List<BatFileViewModel> LoadAllBatFiles(string LocationToSearch, string FileNameFilter)
+        {
+            List<BatFileViewModel> lstRtrn = null;
+
+            var fileNames=GetAllFileNames(LocationToSearch,FileNameFilter);
+
+            if ((fileNames != null) && (fileNames.Length > 0))
+            {
+                lstRtrn = new List<BatFileViewModel>();
+                foreach (string fileName in fileNames)
+                {
+                    BatFileViewModel vm = new BatFileViewModel();
+                    vm.BatFileName = fileName;
+                    vm.CmdText = ReadFileString(fileName);
+                    lstRtrn.Add(vm);
+                }
+            }
+            return (lstRtrn);
+        }
     }
 }

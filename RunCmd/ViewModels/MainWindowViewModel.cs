@@ -22,21 +22,19 @@ namespace RunCmd.ViewModels
     {
         private readonly ICommand _runCmd;
         private readonly ICommand _saveCmd;
+        private readonly ICommand _NewBatFileCmd;
         private readonly ICommand _exitCmd;
         private readonly ICommand _stopCmd;
         private readonly ICommand _OpenOptionsWinCmd;
 
-        private ICommand _selectBatFileCmd;
-
         public ICommand RunCmd { get { return (_runCmd); } }
         public ICommand SaveCmd { get { return (_saveCmd); } }
+        public ICommand NewBatFileCmd { get { return (_NewBatFileCmd); } }
         public ICommand ExitCmd { get { return (_exitCmd); } }
         public ICommand StopCmd { get { return (_stopCmd); } }
         public ICommand ExeFilePickCmd { get { return (_exeFilePickCmd); } }
         public ICommand OpenOptionsWinCmd { get { return (_OpenOptionsWinCmd); } }
-        public ICommand SelectBatFileCmd { get { return (_selectBatFileCmd); } }
 
-        private string _cmdText;
         private Thread _workerThread;
         public string TxtOutput { get { return (_txtOutput); } set { _txtOutput = value; OnPropertyChanged("TxtOutput"); } }
         public bool _isCmdRunning { get; set; }
@@ -49,10 +47,11 @@ namespace RunCmd.ViewModels
         private bool _IsCustomExe;
         private string _ExeFileName;
         private string _SavedCommandsLoc;
-        private ObservableCollection<string> _batFileNames;
-        private string _selectedBatFile;
+        private ObservableCollection<BatFileViewModel> _BatFiles;
+        private BatFileViewModel _selectedBatFile;
+        
 
-        public string SelectedBatFile
+        public BatFileViewModel SelectedBatFile
         {
             get { return _selectedBatFile; }
             set
@@ -60,12 +59,10 @@ namespace RunCmd.ViewModels
                 if ((_selectedBatFile != value)&&(value!=null))
                 {
                     _selectedBatFile = value;
-                    CmdText = Utility.ReadFileString(_selectedBatFile);
                     OnPropertyChanged("SelectedBatFile");
                 }
             }
         }
-
 
         ManualResetEvent _threadResetHandle = new ManualResetEvent(false);
 
@@ -98,36 +95,27 @@ namespace RunCmd.ViewModels
         }
 
 
-        public ObservableCollection<string> BatFileNames
+        public ObservableCollection<BatFileViewModel> BatFiles
         {
-            get { return _batFileNames; }
+            get { return _BatFiles; }
             set {
-                if (_batFileNames != value)
+                if (_BatFiles != value)
                 {
-                    _batFileNames = value;
-                    OnPropertyChanged("BatFileNames");
+                    _BatFiles = value;
+                    OnPropertyChanged("BatFiles");
                 }
             }
         }
 
 
         private readonly IMessageBus _messageBus;
+        private string _SelectedBatFileName;
 
         public IMessageBus MessageBus
         {
             get { return _messageBus; }
         }
 
-
-
-        public string CmdText
-        {
-            get { return _cmdText; }
-            set { 
-                _cmdText = value;
-                OnPropertyChanged("CmdText");
-            }
-        }
 
         public string ExeFileName
         {
@@ -142,10 +130,27 @@ namespace RunCmd.ViewModels
         public string SavedCommandsLoc
         {
             get { return _SavedCommandsLoc; }
-            set { _SavedCommandsLoc = value;
-            BatFileNames = new ObservableCollection<string>(Utility.GetAllFileNames(_SavedCommandsLoc, "*.bat"));
-            OnPropertyChanged("SavedCommandsLoc");
+            set {
+                if (_SavedCommandsLoc != value)
+                {
+                    _SavedCommandsLoc = value;
+                    BatFiles = LoadBatFiles();
+                    OnPropertyChanged("SavedCommandsLoc");
+                }
             }
+        }
+
+        private ObservableCollection<BatFileViewModel> LoadBatFiles()
+        {
+            var rtrn= new ObservableCollection<BatFileViewModel>();
+            var lstitms = Utility.LoadAllBatFiles(SavedCommandsLoc, "*.bat");
+
+            foreach (var item in lstitms)
+            {
+                rtrn.Add(item);
+            }
+
+            return (rtrn);
         }
 
 
@@ -157,28 +162,31 @@ namespace RunCmd.ViewModels
 
             _runCmd = new RelayCommand(ExecRunCmd, CanRunCmd);
             _saveCmd = new RelayCommand(ExecSaveCmd, CanSaveCmd);
+            _NewBatFileCmd = new RelayCommand(ExecNewBatFileCme, CanExecNewBatFileCmd);
             _stopCmd = new RelayCommand(ExecStopCmd, CanStopCmd);
             _exitCmd= new RelayCommand(ExecExit, (obj) => true);
             _exeFilePickCmd = new RelayCommand(ExecExeFilePickCmd, CanChangeExeFile);
             _OpenOptionsWinCmd = new RelayCommand(ExecOpenOptionsWinCmd, CanOpenOptionsWin);
-            _selectBatFileCmd = new RelayCommand(ExecSelectedBatFile, CanSelectedBatFile);
             ExeFileName = "cmd.exe"; //Settings.Instance.ExePath;
             
             string cmdPath= string.IsNullOrWhiteSpace(Settings.Instance.SavedCommandsPath)?Utility.SavedCommandsDefaultPath:Settings.Instance.SavedCommandsPath;
-            _batFileNames=new ObservableCollection<string>(Utility.GetAllFileNames(cmdPath,"*.bat"));
+            SavedCommandsLoc = cmdPath;
+            _BatFiles = LoadBatFiles();//new ObservableCollection<BatFileViewModel>(Utility.LoadAllBatFiles(cmdPath,"*.bat"));
+            _selectedBatFile = new BatFileViewModel();
             MessageBus.Subscribe<NavMessage>(HandleOptionsUpdated);
             _isCmdRunning = false;
         }
 
-        private bool CanSelectedBatFile(object obj)
+        private void ExecNewBatFileCme(object obj)
         {
-            return (!IsCmdRunning);
+            SelectedBatFile = new BatFileViewModel();
         }
 
-        private void ExecSelectedBatFile(object obj)
+        private bool CanExecNewBatFileCmd(object obj)
         {
-            CmdText = Utility.ReadFileString(SelectedBatFile);
+            return(!IsCmdRunning);
         }
+
 
         private bool CanStopCmd(object obj)
         {
@@ -253,33 +261,32 @@ namespace RunCmd.ViewModels
         {
             try
             {
-                //string[] cmdArgs = new string[]
-                //    {
-                //        "/C ",
-                //        CmdText
-                //    };
+                string[] cmdArgs = new string[]
+                    {
+                        "cmd /C ",
+                        "\""+SelectedBatFile.BatFileName+"\""
+                    };
 
 
 
                 
 
-                string strCmdArgs = " ";
+                //string strCmdArgs = " ";
 
-                if (ExeFileName.Equals("cmd.exe", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    strCmdArgs += " /C ";
-                }
-
-                strCmdArgs += CmdText;
-
-                //if (!string.IsNullOrWhiteSpace(CmdText))
+                //if (ExeFileName.Equals("cmd.exe", StringComparison.InvariantCultureIgnoreCase))
                 //{
-                //    List<string> cmdArgs = new List<string>(CmdText.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
-                //    var hs= GetCommandLineArgs(cmdArgs.ToArray());
+                //    strCmdArgs += " /C ";
+                //}
 
-                //    foreach (string key in hs.Keys)
+                //strCmdArgs += SelectedBatFile.CmdText;
+
+                //if (!string.IsNullOrWhiteSpace(SelectedBatFile.CmdText))
+                //{
+                //    //Clean up empty new lines and insert newLines back at end of every non-empty line
+                //    List<string> cmdArgs = new List<string>(SelectedBatFile.CmdText.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries));
+                //    foreach (string cmdarg in cmdArgs)
                 //    {
-                //        strCmdArgs += key + " " + hs[key];
+                //        strCmdArgs += cmdarg + "\r\n";
                 //    }
                 //}
 
@@ -288,7 +295,7 @@ namespace RunCmd.ViewModels
                 _process = new Process();
                 _process.StartInfo = new ProcessStartInfo(ExeFileName)
                 {
-                    Arguments = strCmdArgs,
+                    Arguments = string.Join(" ",cmdArgs),
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -398,8 +405,8 @@ namespace RunCmd.ViewModels
             if(Utility.DirExists(Settings.Instance.SavedCommandsPath)){
             batFileStoreLoc=Settings.Instance.SavedCommandsPath;
             }
-            Utility.WriteToFile(CmdText, batFileStoreLoc+"\\"+Utility.DateTimeStampAsString+".bat");
-            BatFileNames = new ObservableCollection<string>(Utility.GetAllFileNames(batFileStoreLoc, "*.bat"));
+            Utility.WriteToFile(SelectedBatFile.CmdText, batFileStoreLoc + "\\" + Utility.DateTimeStampAsString + ".bat");
+            BatFiles = LoadBatFiles(); //new ObservableCollection<BatFileViewModel>(Utility.LoadAllBatFiles(batFileStoreLoc, "*.bat"));
         }
 
         private void ExecExit(object obj)
@@ -410,15 +417,13 @@ namespace RunCmd.ViewModels
         private bool CanSaveCmd(object obj)
         {
             //Enable the Button only if the mandatory fields are filled
-            if (CmdText != string.Empty)
-                return true;
-            return false;
+            return (!string.IsNullOrWhiteSpace((SelectedBatFile.CmdText)));
         }
 
         private bool CanRunCmd(object obj)
         {
             //Enable the Button only if the mandatory fields are filled
-            if ((!string.IsNullOrWhiteSpace(CmdText))&&(!IsCmdRunning))
+            if ((!string.IsNullOrWhiteSpace(SelectedBatFile.CmdText))&&(!IsCmdRunning))
                 return true;
             return false;
         }

@@ -30,14 +30,22 @@
                 </Menu>
             </Border>
         </Grid>
-        <TextBox AcceptsReturn="True" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding CmdText}" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" />
+        <Grid Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="24"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding SelectedBatFile.BatFileName, Mode=TwoWay}" HorizontalAlignment="Stretch"></TextBox>
+            <TextBox AcceptsReturn="True" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding SelectedBatFile.CmdText, Mode=TwoWay}" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" />
+        </Grid>
         <Border BorderBrush="Gray" BorderThickness="1" Grid.Column="1" Grid.Row="2">
             <Grid Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Name="grdButtons">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"></ColumnDefinition>
-                    <ColumnDefinition Width="28"></ColumnDefinition>
-                    <ColumnDefinition Width="28"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="28"></ColumnDefinition>
+                    <ColumnDefinition Width="28"></ColumnDefinition>
+                    <ColumnDefinition Width="28"></ColumnDefinition>
+                    <ColumnDefinition Width="28"></ColumnDefinition>
                     <ColumnDefinition Width="50"></ColumnDefinition>
                     <ColumnDefinition Width="50"></ColumnDefinition>
                     <ColumnDefinition Width="50"></ColumnDefinition>
@@ -46,15 +54,16 @@
                 <Button Name="btnExePath" Grid.Column="1" Command="{Binding ExeFilePickCmd}" Style="{StaticResource pickerButtonCentered}" />
                 <CheckBox Name="chkIsDefault" Grid.Column="2" IsChecked="{Binding IsCustomExe}" Style="{StaticResource chkCentered}"/>
                 <Button Name="BtnSave" Content="Save" Grid.Column="3" Style="{StaticResource buttonCentered}" Command="{Binding SaveCmd}"  />
-                <Button Name="BtnExecute" Content="Run" Grid.Column="4" Style="{StaticResource buttonCentered}" Command="{Binding RunCmd}" />
-                <Button Name="BtnStop" Content="Stop" Grid.Column="5" Style="{StaticResource buttonCentered}" Command="{Binding StopCmd}" />
+                <Button Name="BtnNew" Content="New" Grid.Column="4" Style="{StaticResource buttonCentered}" Command="{Binding NewBatFileCmd}"  />
+                <Button Name="BtnExecute" Content="Run" Grid.Column="5" Style="{StaticResource buttonCentered}" Command="{Binding RunCmd}" />
+                <Button Name="BtnStop" Content="Stop" Grid.Column="6" Style="{StaticResource buttonCentered}" Command="{Binding StopCmd}" />
             </Grid>
         </Border>
         <ScrollViewer Grid.Column="0" Grid.Row="1" Grid.RowSpan="3">
-            <ListView Name="lstBatFiles" BorderBrush="Gray" BorderThickness="1" ItemsSource="{Binding BatFileNames}" SelectedItem="{Binding SelectedBatFile}">
+            <ListView Name="lstBatFiles" BorderBrush="Gray" BorderThickness="1" ItemsSource="{Binding BatFiles}" SelectedItem="{Binding SelectedBatFile}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding}" Margin="10,5" Background="Gray" TextWrapping="WrapWithOverflow"></TextBlock>
+                        <TextBlock Text="{Binding BatFileName}" Margin="10,5" Background="Gray" TextWrapping="WrapWithOverflow"></TextBlock>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
