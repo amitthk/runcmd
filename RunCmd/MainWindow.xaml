@@ -36,7 +36,7 @@
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding SelectedBatFile.BatFileName, Mode=TwoWay}" HorizontalAlignment="Stretch"></TextBox>
-            <TextBox AcceptsReturn="True" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding SelectedBatFile.CmdText, Mode=TwoWay}" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" />
+            <TextBox AcceptsReturn="{Binding IsCustomExe, Converter={StaticResource inverseBooleanConverter}}" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding SelectedBatFile.CmdText, Mode=TwoWay}" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" />
         </Grid>
         <Border BorderBrush="Gray" BorderThickness="1" Grid.Column="1" Grid.Row="2">
             <Grid Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Name="grdButtons">
