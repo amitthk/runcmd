@@ -142,14 +142,17 @@ namespace RunCmd.ViewModels
 
         private ObservableCollection<BatFileViewModel> LoadBatFiles()
         {
-            var rtrn= new ObservableCollection<BatFileViewModel>();
+            ObservableCollection<BatFileViewModel> rtrn= null;
             var lstitms = Utility.LoadAllBatFiles(SavedCommandsLoc, "*.bat");
 
-            foreach (var item in lstitms)
+            if ((lstitms!=null)&&(lstitms.Count>0))
             {
-                rtrn.Add(item);
+                rtrn = new ObservableCollection<BatFileViewModel>();
+                foreach (var item in lstitms)
+                {
+                    rtrn.Add(item);
+                }
             }
-
             return (rtrn);
         }
 
@@ -259,6 +262,7 @@ namespace RunCmd.ViewModels
 
         private void ExecRunCmd(object obj)
         {
+            SaveOrUpdateCurrentBatFile();
             try
             {
                 string[] cmdArgs = new string[]
@@ -334,6 +338,20 @@ namespace RunCmd.ViewModels
             }
         }
 
+        private void SaveOrUpdateCurrentBatFile()
+        {
+            string batFileStoreLoc = Utility.SavedCommandsDefaultPath;
+            if (Utility.DirExists(Settings.Instance.SavedCommandsPath))
+            {
+                batFileStoreLoc = Settings.Instance.SavedCommandsPath;
+            }
+            batFileStoreLoc = (Utility.Exists(SelectedBatFile.BatFileName)) ? SelectedBatFile.BatFileName : batFileStoreLoc + "\\" + Utility.DateTimeStampAsString + ".bat";
+
+            Utility.WriteToFile(SelectedBatFile.CmdText, batFileStoreLoc);
+            BatFiles = LoadBatFiles();
+
+        }
+
         private Hashtable GetCommandLineArgs(string[] args) {
             Hashtable CommandLineArgs = new Hashtable();
             // Don't bother if no command line args were passed
@@ -401,12 +419,7 @@ namespace RunCmd.ViewModels
 
         private void ExecSaveCmd(object obj)
         {
-            string batFileStoreLoc= Utility.SavedCommandsDefaultPath;
-            if(Utility.DirExists(Settings.Instance.SavedCommandsPath)){
-            batFileStoreLoc=Settings.Instance.SavedCommandsPath;
-            }
-            Utility.WriteToFile(SelectedBatFile.CmdText, batFileStoreLoc + "\\" + Utility.DateTimeStampAsString + ".bat");
-            BatFiles = LoadBatFiles(); //new ObservableCollection<BatFileViewModel>(Utility.LoadAllBatFiles(batFileStoreLoc, "*.bat"));
+            SaveOrUpdateCurrentBatFile();
         }
 
         private void ExecExit(object obj)

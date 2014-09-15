@@ -44,12 +44,7 @@ namespace RunCmd
         public string BatFileNameDisplay
         {
             get {
-                if ((!(string.IsNullOrWhiteSpace(BatFileName))) && (BatFileName.Length > 20))
-                { return (BatFileName.Substring(BatFileName.Length - 20)); }
-                else
-                {
-                    return (BatFileName);
-                }
+                return(BatFileName.Substring(BatFileName.LastIndexOf('\\')+1));
             }
         }
     }

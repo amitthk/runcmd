@@ -89,9 +89,21 @@ namespace RunCmd.Common
                 }
                 catch
                 {
-                    throw;
+                    Utility.DeleteFile(Settings.ConfigPath);
+                    LoadDefaultInstance();
+                    //throw;
                 }
             }
+            else
+            {
+                LoadDefaultInstance();
+            }
+
+            return Settings._instance;
+        }
+
+        private static void LoadDefaultInstance()
+        {
             if (Settings._instance == null)
             {
                 lock (Settings._syncRoot)
@@ -99,7 +111,8 @@ namespace RunCmd.Common
                     Settings._instance = new Settings();
                 }
             }
-            return Settings._instance;
+            Settings.Instance.SavedCommandsPath = Utility.SavedCommandsDefaultPath;
+            Settings.Instance.ExePath = Utility.ExePathDefault;
         }
         public void Save()
         {

@@ -14,7 +14,8 @@ namespace RunCmd
     /// </summary>
     public partial class App : Application
     {
-        //public App():base()
+        //public App()
+        //    : base()
         //{
         //    this.Dispatcher.UnhandledException += OnDispatcherUnhandledException;
         //}
@@ -23,7 +24,7 @@ namespace RunCmd
         //{
         //    string errorMessage = string.Format("An unhandled exception occurred: {0}", e.Exception.Message);
         //    MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        //    RunCmd.Common.Utility.WriteLog(errorMessage + e.Exception.StackTrace, RunCmd.Common.Utility.getAsolutePathForRelativeFileName("log", "Error" + RunCmd.Common.Utility.DateTimeStampAsString + ".log"));
+        //    RunCmd.Common.Utility.WriteToFile(errorMessage + e.Exception.StackTrace, RunCmd.Common.Utility.DefaultLogPath);
         //    e.Handled = true;
         //}
 

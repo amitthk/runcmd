@@ -10,6 +10,7 @@ namespace RunCmd.Common
 {
     public class Utility
     {
+        public static string DefaultLogPath { get { return (getAsolutePathForRelativeFileName("log", "Error" + RunCmd.Common.Utility.DateTimeStampAsString + ".log")); } }
         public static string ExePathDefault{get{return("Cmd.exe");}}
         public static string SavedCommandsDefaultPath{get{return(getAbsolutePathForRelativeDir("Commands"));}}
         public static string ConfigDefaultPath{get{return(getAsolutePathForRelativeFileName("config", "AppConfig.cfg"));}}
@@ -113,7 +114,15 @@ namespace RunCmd.Common
 
         public static string[] GetAllFileNames(string Location, string searchPattern)
         {
-           return(Directory.GetFileSystemEntries(Location, searchPattern, SearchOption.TopDirectoryOnly));
+            if (!DirExists(Location))
+            {
+                return null;
+            }
+            try
+            {
+                return (Directory.GetFileSystemEntries(Location, searchPattern, SearchOption.TopDirectoryOnly));
+            }
+            catch { throw; }
         }
 
         public static void DeleteFile(string fullFileName)
@@ -139,6 +148,11 @@ namespace RunCmd.Common
                 }
             }
             return (lstRtrn);
+        }
+
+        internal static bool Exists(string fileAbsolutePath)
+        {
+            return (File.Exists(fileAbsolutePath));
         }
     }
 }

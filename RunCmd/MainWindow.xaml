@@ -63,7 +63,7 @@
             <ListView Name="lstBatFiles" BorderBrush="Gray" BorderThickness="1" ItemsSource="{Binding BatFiles}" SelectedItem="{Binding SelectedBatFile}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding BatFileName}" Margin="10,5" Background="Gray" TextWrapping="WrapWithOverflow"></TextBlock>
+                        <TextBlock Text="{Binding BatFileNameDisplay}" Margin="10,5" Background="Gray" TextWrapping="WrapWithOverflow"></TextBlock>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
