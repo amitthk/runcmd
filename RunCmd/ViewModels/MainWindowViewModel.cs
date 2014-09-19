@@ -15,6 +15,7 @@ using RunCmd.Common.Helpers;
 using System.Windows.Navigation;
 using System.Collections.ObjectModel;
 using System.Collections;
+using System.IO;
 
 namespace RunCmd.ViewModels
 {
@@ -26,6 +27,7 @@ namespace RunCmd.ViewModels
         private readonly ICommand _exitCmd;
         private readonly ICommand _stopCmd;
         private readonly ICommand _OpenOptionsWinCmd;
+        private readonly ICommand _SendInputCmd;
 
         public ICommand RunCmd { get { return (_runCmd); } }
         public ICommand SaveCmd { get { return (_saveCmd); } }
@@ -34,6 +36,7 @@ namespace RunCmd.ViewModels
         public ICommand StopCmd { get { return (_stopCmd); } }
         public ICommand ExeFilePickCmd { get { return (_exeFilePickCmd); } }
         public ICommand OpenOptionsWinCmd { get { return (_OpenOptionsWinCmd); } }
+        public ICommand SendInputCmd { get { return (_SendInputCmd); } }
 
         private Thread _workerThread;
         public string TxtOutput { get { return (_txtOutput); } set { _txtOutput = value; OnPropertyChanged("TxtOutput"); } }
@@ -49,6 +52,20 @@ namespace RunCmd.ViewModels
         private string _SavedCommandsLoc;
         private ObservableCollection<BatFileViewModel> _BatFiles;
         private BatFileViewModel _selectedBatFile;
+        private string _TxtInput;
+
+        public string TxtInput
+        {
+            get { return _TxtInput; }
+            set {
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    _TxtInput = value;
+                    OnPropertyChanged(() => TxtInput);
+                }
+            }
+        }
+
         
 
         public BatFileViewModel SelectedBatFile
@@ -109,7 +126,6 @@ namespace RunCmd.ViewModels
 
 
         private readonly IMessageBus _messageBus;
-        private string _SelectedBatFileName;
 
         public IMessageBus MessageBus
         {
@@ -143,6 +159,10 @@ namespace RunCmd.ViewModels
         private ObservableCollection<BatFileViewModel> LoadBatFiles()
         {
             ObservableCollection<BatFileViewModel> rtrn= null;
+            if (!Utility.DirExists(SavedCommandsLoc))
+            {
+                SavedCommandsLoc = Utility.SavedCommandsDefaultPath;
+            }
             var lstitms = Utility.LoadAllBatFiles(SavedCommandsLoc, "*.bat");
 
             if ((lstitms!=null)&&(lstitms.Count>0))
@@ -170,6 +190,7 @@ namespace RunCmd.ViewModels
             _exitCmd= new RelayCommand(ExecExit, (obj) => true);
             _exeFilePickCmd = new RelayCommand(ExecExeFilePickCmd, CanChangeExeFile);
             _OpenOptionsWinCmd = new RelayCommand(ExecOpenOptionsWinCmd, CanOpenOptionsWin);
+            _SendInputCmd = new RelayCommand(ExecSendInputCmd, CanSendInputCmd);
             ExeFileName = "cmd.exe"; //Settings.Instance.ExePath;
             
             string cmdPath= string.IsNullOrWhiteSpace(Settings.Instance.SavedCommandsPath)?Utility.SavedCommandsDefaultPath:Settings.Instance.SavedCommandsPath;
@@ -178,6 +199,16 @@ namespace RunCmd.ViewModels
             _selectedBatFile = new BatFileViewModel();
             MessageBus.Subscribe<NavMessage>(HandleOptionsUpdated);
             _isCmdRunning = false;
+        }
+
+        private bool CanSendInputCmd(object obj)
+        {
+            return (IsCmdRunning);
+        }
+
+        private void ExecSendInputCmd(object obj)
+        {
+            _process.StandardInput.WriteLine(TxtInput);
         }
 
         private void ExecNewBatFileCme(object obj)
@@ -329,7 +360,6 @@ namespace RunCmd.ViewModels
 
 
                 _workerThread.Join();
-                IsCmdRunning = false;
 
             }
             catch (Exception exc)
@@ -340,16 +370,28 @@ namespace RunCmd.ViewModels
 
         private void SaveOrUpdateCurrentBatFile()
         {
-            string batFileStoreLoc = Utility.SavedCommandsDefaultPath;
-            if (Utility.DirExists(Settings.Instance.SavedCommandsPath))
+            string batFileToSave = SelectedBatFile.BatFileName;
+
+            if (!SelectedBatFile.BatFileName.EndsWith(".bat"))
+	        {
+                SelectedBatFile.BatFileNameDisplay+=".bat";
+	        }
+
+            if (SavedCommandsLoc.Equals(Utility.SavedCommandsDefaultPath))
             {
-                batFileStoreLoc = Settings.Instance.SavedCommandsPath;
+                batFileToSave = SelectedBatFile.BatFileName;
             }
-            batFileStoreLoc = (Utility.Exists(SelectedBatFile.BatFileName)) ? SelectedBatFile.BatFileName : batFileStoreLoc + "\\" + Utility.DateTimeStampAsString + ".bat";
+            else //If it is not the default location, don't override the original batch file, rather create new one
+            {
+                while (Utility.Exists(SelectedBatFile.BatFileName))
+                {
+                    SelectedBatFile.BatFileName = SelectedBatFile.BatFileName.Substring(0, SelectedBatFile.BatFileName.Length - 4) + "_1.bat";
+                }
+                batFileToSave = SelectedBatFile.BatFileName;
+            }
 
-            Utility.WriteToFile(SelectedBatFile.CmdText, batFileStoreLoc);
+            Utility.WriteToFile(SelectedBatFile.CmdText, batFileToSave);
             BatFiles = LoadBatFiles();
-
         }
 
         private Hashtable GetCommandLineArgs(string[] args) {

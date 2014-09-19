@@ -70,7 +70,7 @@ namespace RunCmd.Common
                 {
                     Type outType = typeof(T);
 
-                    XmlSerializer serializer = new XmlSerializer(outType);
+                    XmlSerializer serializer = XmlSerializer.FromTypes(new[]{outType})[0];
                     using (XmlReader reader = new XmlTextReader(read))
                     {
                         objectOut = (T)serializer.Deserialize(reader);

@@ -46,6 +46,10 @@ namespace RunCmd
             get {
                 return(BatFileName.Substring(BatFileName.LastIndexOf('\\')+1));
             }
+            set
+            {
+                BatFileName = BatFileName.Substring(0, BatFileName.LastIndexOf('\\') + 1) + value;
+            }
         }
     }
 }
