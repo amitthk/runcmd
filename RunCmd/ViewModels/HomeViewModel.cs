@@ -360,7 +360,7 @@ namespace RunCmd.ViewModels
                 SelectedBatFile.BatFileNameDisplay+=".bat";
 	        }
 
-            bool contentsChanged = (!(Utility.ReadFileString(SelectedBatFile.BatFileName).Equals(SelectedBatFile.CmdText, StringComparison.InvariantCultureIgnoreCase)));
+            bool contentsChanged = ((!Utility.Exists(SelectedBatFile.BatFileName))||(!(Utility.ReadFileString(SelectedBatFile.BatFileName).Equals(SelectedBatFile.CmdText, StringComparison.InvariantCultureIgnoreCase))));
 
             if (SavedCommandsLoc.Equals(Utility.SavedCommandsDefaultPath))
             {
