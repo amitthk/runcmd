@@ -28,7 +28,8 @@ namespace RunCmd.Common
             try
             {
                 XmlDocument xmlDocument = new XmlDocument();
-                XmlSerializer serializer = new XmlSerializer(serializableObject.GetType());
+                //XmlSerializer serializer = new XmlSerializer(serializableObject.GetType());
+                XmlSerializer serializer = XmlSerializer.FromTypes(new[] { serializableObject.GetType() })[0];
                 using (MemoryStream stream = new MemoryStream())
                 {
                     serializer.Serialize(stream, serializableObject);
