@@ -11,7 +11,7 @@ namespace RunCmd
     {
         public TextFileViewModel()
         {
-            _TextFileName = RunCmd.Common.Utility.SavedCommandsDefaultPath+"\\" +RunCmd.Common.Utility.DateTimeStampAsString+".bat";
+            _TextFileName = RunCmd.Common.RunCmdConstants.SavedCommandsDefaultPath+"\\" +RunCmd.Common.RunCmdConstants.DateTimeStampAsString+".bat";
             _cmdText = "";
         }
 

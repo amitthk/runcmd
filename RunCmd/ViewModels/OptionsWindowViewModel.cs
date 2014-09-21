@@ -23,6 +23,10 @@ namespace RunCmd.ViewModels
         
         private readonly IMessageBus _messageBus;
 
+        private string _ExePath;
+        private string _SavedCommandsPath;
+        private bool _SaveLogFiles;
+
         public IMessageBus MessageBus
         {
             get { return _messageBus; }
@@ -34,6 +38,7 @@ namespace RunCmd.ViewModels
             _messageBus = App.messageBus;
             _ExePath = Settings.Instance.ExePath;
             _SavedCommandsPath = Settings.Instance.SavedCommandsPath;
+            _SaveLogFiles = Settings.Instance.IsSaveLogsEnabled;
             _ChangeExePathCmd = new RelayCommand(ExecChangeExePath, (o) => { return true; });
             _ChangeSavedCommandsLocCmd = new RelayCommand(ExecChangeSavedCommandsLoc, (o) => { return true; });
             _ResetSettingsCmd = new RelayCommand(ExecResetSettingsCmd, CanResetSettingsCmd);
@@ -96,9 +101,6 @@ namespace RunCmd.ViewModels
                 MessageBus.Publish(message);
             }
         }
-	    
-        private string _ExePath;
-        private string _SavedCommandsPath;
 
         public string SavedCommandsPath
         {
@@ -115,5 +117,20 @@ namespace RunCmd.ViewModels
             OnPropertyChanged("ExePath");
             }
 	    }
+
+
+        public bool SaveLogFiles
+        {
+            get { return _SaveLogFiles; }
+            set { 
+                _SaveLogFiles = value;
+                Settings.Instance.IsSaveLogsEnabled = value;
+                Settings.Instance.Save();
+                OnPropertyChanged("SaveLogFiles");
+                NavMessage message = new NavMessage("SaveLogFiles");
+                MessageBus.Publish(message);
+            }
+        }
+
     }
 }

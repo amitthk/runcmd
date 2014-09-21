@@ -66,7 +66,7 @@ namespace RunCmd.ViewModels
         private ObservableCollection<TextFileViewModel> LoadLogFiles()
         {
             ObservableCollection<TextFileViewModel> rtrn = null;
-            string SavedLogsLoc = Utility.DefaultLogFolder;
+            string SavedLogsLoc = RunCmdConstants.DefaultLogFolder;
 
             if (Utility.DirExists(SavedLogsLoc))
             {

@@ -42,7 +42,7 @@ namespace RunCmd.Common
             catch (Exception ex)
             {
                 //Log exception here
-                Utility.WriteToFile(ex.Message + ex.StackTrace, Utility.getAsolutePathForRelativeFileName("log", "Error" + Utility.DateTimeStampAsString + ".log"));
+                Utility.WriteToFile(ex.Message + ex.StackTrace, Utility.getAsolutePathForRelativeFileName("log", "Error" + RunCmdConstants.DateTimeStampAsString + ".log"));
             }
         }
 
@@ -84,7 +84,7 @@ namespace RunCmd.Common
             catch (Exception ex)
             {
                 //Log exception here
-                Utility.WriteToFile(ex.Message + ex.StackTrace, Utility.getAsolutePathForRelativeFileName("log", "Error" + Utility.DateTimeStampAsString + ".log"));
+                Utility.WriteToFile(ex.Message + ex.StackTrace, Utility.getAsolutePathForRelativeFileName("log", "Error" + RunCmdConstants.DateTimeStampAsString + ".log"));
             }
 
             return objectOut;

@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\Constants.cs" />
     <Compile Include="Common\Helpers\Converters.cs" />
     <Compile Include="ViewModels\BatFileViewModel.cs" />
     <Compile Include="Common\Helpers\TextBoxBehavior.cs" />

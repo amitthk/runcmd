@@ -10,13 +10,6 @@ namespace RunCmd.Common
 {
     public class Utility
     {
-        public static string DefaultLogFileName { get { return (getAsolutePathForRelativeFileName("log", "Error" + RunCmd.Common.Utility.DateTimeStampAsString + ".log")); } }
-        public static string DefaultLogFolder { get { return (getAbsolutePathForRelativeDir("log")); } }
-        public static string ExePathDefault{get{return("Cmd.exe");}}
-        public static string SavedCommandsDefaultPath{get{return(getAbsolutePathForRelativeDir("Commands"));}}
-        public static string ConfigDefaultPath{get{return(getAsolutePathForRelativeFileName("config", "AppConfig.cfg"));}}
-        public static string DateTimeStampAsString { get { return (DateTime.Now.ToString("ddMMMyyyy_hhmm")); } }
-
         internal static string getAsolutePathForRelativeFileName(string relDirectoryName, string fileName)
         {
             string strFileName = Path.Combine(getAbsolutePathForRelativeDir(relDirectoryName), fileName);

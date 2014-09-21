@@ -30,7 +30,9 @@
             <Button Grid.Column="2" Grid.Row="1" Height="24" Width="24" Content="..." Command="{Binding ChangeSavedCommandsLocCmd}"></Button>
 
             <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" Height="24" Width="40" Content="Reset" Command="{Binding ResetSettingsCmd}" HorizontalAlignment="Right"></Button>
-
+            
+            <TextBlock Text="Save Logs?" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2"></TextBlock>
+            <CheckBox IsChecked="{Binding SaveLogFiles}" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center"></CheckBox>
         </Grid>
     </Border>
 </Window>

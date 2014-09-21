@@ -157,7 +157,7 @@ namespace RunCmd.ViewModels
             ObservableCollection<TextFileViewModel> rtrn= null;
             if (!Utility.DirExists(SavedCommandsLoc))
             {
-                SavedCommandsLoc = Utility.SavedCommandsDefaultPath;
+                SavedCommandsLoc = RunCmdConstants.SavedCommandsDefaultPath;
             }
             var lstitms = Utility.LoadAllBatFiles(SavedCommandsLoc, "*.bat");
 
@@ -187,7 +187,7 @@ namespace RunCmd.ViewModels
             _SendInputCmd = new RelayCommand(ExecSendInputCmd, CanSendInputCmd);
             ExeFileName = "cmd.exe"; //Settings.Instance.ExePath;
             
-            string cmdPath= string.IsNullOrWhiteSpace(Settings.Instance.SavedCommandsPath)?Utility.SavedCommandsDefaultPath:Settings.Instance.SavedCommandsPath;
+            string cmdPath= string.IsNullOrWhiteSpace(Settings.Instance.SavedCommandsPath)?RunCmdConstants.SavedCommandsDefaultPath:Settings.Instance.SavedCommandsPath;
             SavedCommandsLoc = cmdPath;
             _BatFiles = LoadBatFiles();//new ObservableCollection<TextFileViewModel>(Utility.LoadAllBatFiles(cmdPath,"*.bat"));
             _selectedBatFile = new TextFileViewModel();
@@ -362,7 +362,7 @@ namespace RunCmd.ViewModels
 
             bool contentsChanged = ((!Utility.Exists(SelectedBatFile.TextFileName))||(!(Utility.ReadFileString(SelectedBatFile.TextFileName).Equals(SelectedBatFile.CmdText, StringComparison.InvariantCultureIgnoreCase))));
 
-            if (SavedCommandsLoc.Equals(Utility.SavedCommandsDefaultPath))
+            if (SavedCommandsLoc.Equals(RunCmdConstants.SavedCommandsDefaultPath))
             {
                 batFileToSave = SelectedBatFile.TextFileName;
             }
@@ -435,7 +435,10 @@ namespace RunCmd.ViewModels
                 buffer.Append(erTxt);
                 AppendError(erTxt);
             }
-            Utility.WriteToFile (buffer.ToString(),Utility.getAsolutePathForRelativeFileName("log",Utility.DateTimeStampAsString+".log"));
+
+            if(Settings.Instance.IsSaveLogsEnabled){
+            Utility.WriteToFile (buffer.ToString(),Utility.getAsolutePathForRelativeFileName("log",RunCmdConstants.DateTimeStampAsString+".log"));
+            }
             _threadResetHandle.Set();
             proc.Dispose();
         }

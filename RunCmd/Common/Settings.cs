@@ -11,8 +11,8 @@ namespace RunCmd.Common
     {
         private static volatile Settings _instance;
         private static object _syncRoot = new object();
-        private string _ExePath = Utility.ExePathDefault;
-        private string _SavedCommandsPath=Utility.SavedCommandsDefaultPath;
+        private string _ExePath = RunCmdConstants.ExePathDefault;
+        private string _SavedCommandsPath=RunCmdConstants.SavedCommandsDefaultPath;
 
         [IgnoreDataMember]
         [XmlIgnore]
@@ -34,7 +34,7 @@ namespace RunCmd.Common
         {
             get
             {
-                return Utility.ConfigDefaultPath;
+                return RunCmdConstants.ConfigDefaultPath;
             }
         }
 
@@ -70,6 +70,14 @@ namespace RunCmd.Common
         {
             get { return _SavedCommandsPath; }
             set { _SavedCommandsPath = value; }
+        }
+
+        private bool _IsSaveLogsEnabled=true;
+
+        public bool IsSaveLogsEnabled
+        {
+            get { return _IsSaveLogsEnabled; }
+            set { _IsSaveLogsEnabled = value; }
         }
 
 
@@ -111,8 +119,8 @@ namespace RunCmd.Common
                     Settings._instance = new Settings();
                 }
             }
-            Settings.Instance.SavedCommandsPath = Utility.SavedCommandsDefaultPath;
-            Settings.Instance.ExePath = Utility.ExePathDefault;
+            Settings.Instance.SavedCommandsPath = RunCmdConstants.SavedCommandsDefaultPath;
+            Settings.Instance.ExePath = RunCmdConstants.ExePathDefault;
         }
         public void Save()
         {
