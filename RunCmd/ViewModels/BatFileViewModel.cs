@@ -7,26 +7,26 @@ using System.Threading.Tasks;
 
 namespace RunCmd
 {
-    public class BatFileViewModel : BaseViewModel
+    public class TextFileViewModel : BaseViewModel
     {
-        public BatFileViewModel()
+        public TextFileViewModel()
         {
-            _BatFileName = RunCmd.Common.Utility.SavedCommandsDefaultPath+"\\" +RunCmd.Common.Utility.DateTimeStampAsString+".bat";
+            _TextFileName = RunCmd.Common.Utility.SavedCommandsDefaultPath+"\\" +RunCmd.Common.Utility.DateTimeStampAsString+".bat";
             _cmdText = "";
         }
 
-        private string _BatFileName;
+        private string _TextFileName;
         private string _cmdText;
 
-        public string BatFileName
+        public string TextFileName
         {
-            get { return _BatFileName; }
+            get { return _TextFileName; }
             set
             {
-                if (_BatFileName != value)
+                if (_TextFileName != value)
                 {
-                    _BatFileName = value;
-                    OnPropertyChanged(() => BatFileName);
+                    _TextFileName = value;
+                    OnPropertyChanged(() => TextFileName);
                 }
             }
         }
@@ -41,14 +41,14 @@ namespace RunCmd
             }
         }
 
-        public string BatFileNameDisplay
+        public string TextFileNameDisplay
         {
             get {
-                return(BatFileName.Substring(BatFileName.LastIndexOf('\\')+1));
+                return(TextFileName.Substring(TextFileName.LastIndexOf('\\')+1));
             }
             set
             {
-                BatFileName = BatFileName.Substring(0, BatFileName.LastIndexOf('\\') + 1) + value;
+                TextFileName = TextFileName.Substring(0, TextFileName.LastIndexOf('\\') + 1) + value;
             }
         }
     }

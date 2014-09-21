@@ -62,6 +62,7 @@
     <Compile Include="Common\Messaging\MessageBus.cs" />
     <Compile Include="Common\Helpers\ProcessHelper.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Views\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>

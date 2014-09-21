@@ -10,7 +10,8 @@ namespace RunCmd.Common
 {
     public class Utility
     {
-        public static string DefaultLogPath { get { return (getAsolutePathForRelativeFileName("log", "Error" + RunCmd.Common.Utility.DateTimeStampAsString + ".log")); } }
+        public static string DefaultLogFileName { get { return (getAsolutePathForRelativeFileName("log", "Error" + RunCmd.Common.Utility.DateTimeStampAsString + ".log")); } }
+        public static string DefaultLogFolder { get { return (getAbsolutePathForRelativeDir("log")); } }
         public static string ExePathDefault{get{return("Cmd.exe");}}
         public static string SavedCommandsDefaultPath{get{return(getAbsolutePathForRelativeDir("Commands"));}}
         public static string ConfigDefaultPath{get{return(getAsolutePathForRelativeFileName("config", "AppConfig.cfg"));}}
@@ -130,19 +131,19 @@ namespace RunCmd.Common
             File.Delete(fullFileName);
         }
 
-        internal static List<BatFileViewModel> LoadAllBatFiles(string LocationToSearch, string FileNameFilter)
+        internal static List<TextFileViewModel> LoadAllBatFiles(string LocationToSearch, string FileNameFilter)
         {
-            List<BatFileViewModel> lstRtrn = null;
+            List<TextFileViewModel> lstRtrn = null;
 
             var fileNames=GetAllFileNames(LocationToSearch,FileNameFilter);
 
             if ((fileNames != null) && (fileNames.Length > 0))
             {
-                lstRtrn = new List<BatFileViewModel>();
+                lstRtrn = new List<TextFileViewModel>();
                 foreach (string fileName in fileNames)
                 {
-                    BatFileViewModel vm = new BatFileViewModel();
-                    vm.BatFileName = fileName;
+                    TextFileViewModel vm = new TextFileViewModel();
+                    vm.TextFileName = fileName;
                     vm.CmdText = ReadFileString(fileName);
                     lstRtrn.Add(vm);
                 }

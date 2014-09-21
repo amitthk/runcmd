@@ -28,7 +28,7 @@
                 <RowDefinition Height="24"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
-            <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding SelectedBatFile.BatFileNameDisplay, Mode=TwoWay}" HorizontalAlignment="Stretch"></TextBox>
+            <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding SelectedBatFile.TextFileNameDisplay, Mode=TwoWay}" HorizontalAlignment="Stretch"></TextBox>
             <TextBox AcceptsReturn="{Binding IsCustomExe, Converter={StaticResource inverseBooleanConverter}}" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding SelectedBatFile.CmdText, Mode=TwoWay}" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" />
         </Grid>
         <Border BorderBrush="Gray" BorderThickness="1" Grid.Column="1" Grid.Row="2">
@@ -56,7 +56,7 @@
             <ListView Name="lstBatFiles" BorderBrush="Gray" BorderThickness="1" ItemsSource="{Binding BatFiles}" SelectedItem="{Binding SelectedBatFile}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding BatFileNameDisplay}" Margin="10,5" Background="Gray" TextWrapping="WrapWithOverflow"></TextBlock>
+                        <TextBlock Text="{Binding TextFileNameDisplay}" Margin="10,5" Background="Gray" TextWrapping="WrapWithOverflow"></TextBlock>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

@@ -46,8 +46,8 @@ namespace RunCmd.ViewModels
         private bool _IsCustomExe;
         private string _ExeFileName;
         private string _SavedCommandsLoc;
-        private ObservableCollection<BatFileViewModel> _BatFiles;
-        private BatFileViewModel _selectedBatFile;
+        private ObservableCollection<TextFileViewModel> _BatFiles;
+        private TextFileViewModel _selectedBatFile;
         private string _TxtInput;
 
         public string TxtInput
@@ -64,7 +64,7 @@ namespace RunCmd.ViewModels
 
         
 
-        public BatFileViewModel SelectedBatFile
+        public TextFileViewModel SelectedBatFile
         {
             get { return _selectedBatFile; }
             set
@@ -108,7 +108,7 @@ namespace RunCmd.ViewModels
         }
 
 
-        public ObservableCollection<BatFileViewModel> BatFiles
+        public ObservableCollection<TextFileViewModel> BatFiles
         {
             get { return _BatFiles; }
             set {
@@ -152,9 +152,9 @@ namespace RunCmd.ViewModels
             }
         }
 
-        private ObservableCollection<BatFileViewModel> LoadBatFiles()
+        private ObservableCollection<TextFileViewModel> LoadBatFiles()
         {
-            ObservableCollection<BatFileViewModel> rtrn= null;
+            ObservableCollection<TextFileViewModel> rtrn= null;
             if (!Utility.DirExists(SavedCommandsLoc))
             {
                 SavedCommandsLoc = Utility.SavedCommandsDefaultPath;
@@ -163,7 +163,7 @@ namespace RunCmd.ViewModels
 
             if ((lstitms!=null)&&(lstitms.Count>0))
             {
-                rtrn = new ObservableCollection<BatFileViewModel>();
+                rtrn = new ObservableCollection<TextFileViewModel>();
                 foreach (var item in lstitms)
                 {
                     rtrn.Add(item);
@@ -189,8 +189,8 @@ namespace RunCmd.ViewModels
             
             string cmdPath= string.IsNullOrWhiteSpace(Settings.Instance.SavedCommandsPath)?Utility.SavedCommandsDefaultPath:Settings.Instance.SavedCommandsPath;
             SavedCommandsLoc = cmdPath;
-            _BatFiles = LoadBatFiles();//new ObservableCollection<BatFileViewModel>(Utility.LoadAllBatFiles(cmdPath,"*.bat"));
-            _selectedBatFile = new BatFileViewModel();
+            _BatFiles = LoadBatFiles();//new ObservableCollection<TextFileViewModel>(Utility.LoadAllBatFiles(cmdPath,"*.bat"));
+            _selectedBatFile = new TextFileViewModel();
             MessageBus.Subscribe<NavMessage>(HandleOptionsUpdated);
             _isCmdRunning = false;
         }
@@ -207,7 +207,7 @@ namespace RunCmd.ViewModels
 
         private void ExecNewBatFileCme(object obj)
         {
-            SelectedBatFile = new BatFileViewModel();
+            SelectedBatFile = new TextFileViewModel();
         }
 
         private bool CanExecNewBatFileCmd(object obj)
@@ -282,7 +282,7 @@ namespace RunCmd.ViewModels
                 string[] cmdArgs = new string[]
                     {
                         "cmd /C ",
-                        "\""+SelectedBatFile.BatFileName+"\""
+                        "\""+SelectedBatFile.TextFileName+"\""
                     };
 
 
@@ -353,34 +353,34 @@ namespace RunCmd.ViewModels
 
         private void SaveOrUpdateCurrentBatFile()
         {
-            string batFileToSave = SelectedBatFile.BatFileName;
+            string batFileToSave = SelectedBatFile.TextFileName;
 
-            if (!SelectedBatFile.BatFileName.EndsWith(".bat"))
+            if (!SelectedBatFile.TextFileName.EndsWith(".bat"))
 	        {
-                SelectedBatFile.BatFileNameDisplay+=".bat";
+                SelectedBatFile.TextFileNameDisplay+=".bat";
 	        }
 
-            bool contentsChanged = (!(Utility.ReadFileString(SelectedBatFile.BatFileName).Equals(SelectedBatFile.CmdText, StringComparison.InvariantCultureIgnoreCase)));
+            bool contentsChanged = ((!Utility.Exists(SelectedBatFile.TextFileName))||(!(Utility.ReadFileString(SelectedBatFile.TextFileName).Equals(SelectedBatFile.CmdText, StringComparison.InvariantCultureIgnoreCase))));
 
             if (SavedCommandsLoc.Equals(Utility.SavedCommandsDefaultPath))
             {
-                batFileToSave = SelectedBatFile.BatFileName;
+                batFileToSave = SelectedBatFile.TextFileName;
             }
             else //If it is not the default location, don't override the original batch file, rather create new one
             {
-                while (Utility.Exists(SelectedBatFile.BatFileName))
+                while (Utility.Exists(SelectedBatFile.TextFileName))
                 {
                     //If the text has changed, we only create a new file, we don't override the original
                     if (contentsChanged)
                     {
-                        SelectedBatFile.BatFileName = SelectedBatFile.BatFileName.Substring(0, SelectedBatFile.BatFileName.Length - 4) + "_1.bat";
+                        SelectedBatFile.TextFileName = SelectedBatFile.TextFileName.Substring(0, SelectedBatFile.TextFileName.Length - 4) + "_1.bat";
                     }
                     else
                     {
                         break;
                     }
                 }
-                batFileToSave = SelectedBatFile.BatFileName;
+                batFileToSave = SelectedBatFile.TextFileName;
             }
             if (contentsChanged)
             {
