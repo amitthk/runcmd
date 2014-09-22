@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="RunCmd" Height="Auto" Width="Auto"
         WindowStyle="SingleBorderWindow"
+        Icon="pack://application:,,,/Resources/Favicon.ico"
         xmlns:ViewModels="clr-namespace:RunCmd.ViewModels"
         WindowState="Normal" WindowStartupLocation="CenterScreen">
     <Window.DataContext>

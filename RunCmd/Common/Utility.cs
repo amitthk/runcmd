@@ -12,12 +12,13 @@ namespace RunCmd.Common
     {
         internal static string getAsolutePathForRelativeFileName(string relDirectoryName, string fileName)
         {
-            string strFileName = Path.Combine(getAbsolutePathForRelativeDir(relDirectoryName), fileName);
-
             if (!Directory.Exists(getAbsolutePathForRelativeDir(relDirectoryName)))
             {
                 Directory.CreateDirectory(getAbsolutePathForRelativeDir(relDirectoryName));
             }
+
+            string strFileName = Path.Combine(getAbsolutePathForRelativeDir(relDirectoryName), fileName);
+
             return (strFileName);
         }
 
