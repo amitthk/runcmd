@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:l="clr-namespace:RunCmd.Common.Helpers"
       mc:Ignorable="d" DataContext="{Binding LogsView, Source={StaticResource Locator}}"
 	Title="LogsView">
     <Grid>
@@ -28,7 +29,7 @@
             <Label Grid.Row="1" Grid.Column="0" Content="Logs:"></Label>
         </Grid>
         <ScrollViewer Grid.Column="0" Grid.Row="1" Grid.RowSpan="3">
-            <ListView Name="lstLogFiles" BorderBrush="Gray" BorderThickness="1" ItemsSource="{Binding LogFiles}" SelectedItem="{Binding SelectedLogFile}" HorizontalContentAlignment="Stretch">
+            <ListView Name="lstLogFiles" BorderBrush="Gray" BorderThickness="1" ItemsSource="{Binding LogFiles}" SelectedItem="{Binding SelectedLogFile}" HorizontalContentAlignment="Stretch" l:MouseDoubleClick.Command="{Binding ViewLogCmd}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding TextFileNameDisplay}" Margin="10,5" Background="Gray" TextWrapping="WrapWithOverflow"></TextBlock>

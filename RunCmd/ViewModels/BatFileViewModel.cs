@@ -17,6 +17,13 @@ namespace RunCmd
 
         private string _TextFileName;
         private string _cmdText;
+        private bool _IsDirty;
+
+        public bool IsDirty
+        {
+            get { return _IsDirty; }
+        }
+
 
         public string TextFileName
         {
@@ -26,7 +33,8 @@ namespace RunCmd
                 if (_TextFileName != value)
                 {
                     _TextFileName = value;
-                    OnPropertyChanged(() => TextFileName);
+                    _IsDirty = true;
+                    OnPropertyChanged("TextFileName");
                 }
             }
         }
@@ -36,8 +44,12 @@ namespace RunCmd
             get { return _cmdText; }
             set
             {
-                _cmdText = value;
-                OnPropertyChanged("CmdText");
+                if ((_cmdText != value) && (!string.IsNullOrWhiteSpace(value)))
+                {
+                    _cmdText = value;
+                    _IsDirty = true;
+                    OnPropertyChanged("CmdText");
+                }
             }
         }
 

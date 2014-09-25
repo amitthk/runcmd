@@ -24,5 +24,10 @@ namespace RunCmd.Views
         {
             InitializeComponent();
         }
+
+        private void lstLogFiles_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+
+        }
     }
 }

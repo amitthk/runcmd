@@ -58,6 +58,7 @@
     </ApplicationDefinition>
     <Compile Include="Common\Constants.cs" />
     <Compile Include="Common\Helpers\Converters.cs" />
+    <Compile Include="Common\Helpers\MouseDoubleClickBehavior.cs" />
     <Compile Include="ViewModels\BatFileViewModel.cs" />
     <Compile Include="Common\Helpers\TextBoxBehavior.cs" />
     <Compile Include="Common\Messaging\IMessageBus.cs" />

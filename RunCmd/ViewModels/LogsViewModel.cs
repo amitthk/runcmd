@@ -15,11 +15,13 @@ namespace RunCmd.ViewModels
         private TextFileViewModel _SelectedLogFile;
         private readonly ICommand _GoBackCmd;
         private readonly ICommand _DeleteLogCmd;
+        private readonly ICommand _ViewLogCmd;
         private Common.Messaging.IMessageBus _messageBus;
 
 
         public ICommand GoBackCmd { get { return (_GoBackCmd); } }
         public ICommand DeleteLogCmd { get { return (_DeleteLogCmd); } }
+        public ICommand ViewLogCmd { get { return (_ViewLogCmd); } }
 
         public TextFileViewModel SelectedLogFile
         {
@@ -49,7 +51,18 @@ namespace RunCmd.ViewModels
             _messageBus = App.messageBus;
             _GoBackCmd = new RelayCommand(ExecGoBackCmd, CanGoBackCmd);
             _DeleteLogCmd = new RelayCommand(ExecDeleteLog,CanDeleteLog);
+            _ViewLogCmd = new RelayCommand(ExecViewLogCmd, CanViewLogCmd);
             _LogFiles = LoadLogFiles();
+        }
+
+        private bool CanViewLogCmd(object obj)
+        {
+            return (SelectedLogFile != null);
+        }
+
+        private void ExecViewLogCmd(object obj)
+        {
+            System.Diagnostics.Process.Start(SelectedLogFile.TextFileName);
         }
 
         private bool CanDeleteLog(object obj)

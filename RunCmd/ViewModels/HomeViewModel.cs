@@ -467,13 +467,13 @@ namespace RunCmd.ViewModels
         private bool CanSaveCmd(object obj)
         {
             //Enable the Button only if the mandatory fields are filled
-            return (!string.IsNullOrWhiteSpace((SelectedBatFile.CmdText)));
+            return (SelectedBatFile.IsDirty);
         }
 
         private bool CanRunCmd(object obj)
         {
             //Enable the Button only if the mandatory fields are filled
-            if ((!string.IsNullOrWhiteSpace(SelectedBatFile.CmdText))&&(!IsCmdRunning))
+            if ((SelectedBatFile.IsDirty)&&(!IsCmdRunning))
                 return true;
             return false;
         }
