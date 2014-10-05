@@ -334,6 +334,7 @@ namespace RunCmd.ViewModels
                     {
                         bool ret = _process.Start();
                         _process.BeginOutputReadLine();
+                        _process.BeginErrorReadLine();
                         //is ret what you expect it to be....
                     });
                     _workerThread = new Thread(ths);
