@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:ViewModels="clr-namespace:RunCmd.ViewModels"
         xmlns:hlpr="clr-namespace:RunCmd.Common.Helpers"
+      xmlns:acb="clr-namespace:RunCmd.Common.AttachedCommandBehavior"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
 	Title="HomeView">
@@ -25,10 +26,22 @@
         </Grid.ColumnDefinitions>
         <Line Grid.Row="0"></Line>
         <ScrollViewer Grid.Column="0" Grid.Row="1" Grid.RowSpan="4">
-            <ListView Name="lstBatFiles" BorderBrush="Gray" BorderThickness="1" ItemsSource="{Binding BatFiles}" SelectedItem="{Binding SelectedBatFile}">
+            <ListView Name="lstBatFiles" BorderBrush="Gray" BorderThickness="1" ItemsSource="{Binding BatFiles}" SelectedItem="{Binding SelectedBatFile}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Padding="0">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                        <Setter Property="Background" Value="Gray" />
+                        <Setter Property="Margin" Value="0" />
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="acb:CommandBehavior.Event" Value="MouseDoubleClick" />
+                        <Setter Property="acb:CommandBehavior.Command" Value="{Binding ElementName=lstBatFiles,Path=DataContext.RunCmd}" />
+                        <Setter Property="acb:CommandBehavior.CommandParameter" Value="{Binding}" />
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding TextFileNameDisplay}" Margin="10,5" Background="Gray" TextWrapping="WrapWithOverflow"></TextBlock>
+                        <TextBlock Text="{Binding TextFileNameDisplay}" Margin="5" Padding="0" Width="{Binding ElementName=Container,Path=ActualWidth}"  TextWrapping="WrapWithOverflow" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

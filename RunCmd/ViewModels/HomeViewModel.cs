@@ -276,6 +276,12 @@ namespace RunCmd.ViewModels
 
         private void ExecRunCmd(object obj)
         {
+            MessageBoxResult confirmRunResult = MessageBox.Show("Are you sure you want to run this file?","Run Batch File?", MessageBoxButton.OKCancel);
+            if (confirmRunResult==MessageBoxResult.Cancel)
+            {
+                return;
+            }
+
             SaveOrUpdateCurrentBatFile();
             try
             {

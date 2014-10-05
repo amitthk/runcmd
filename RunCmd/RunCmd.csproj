@@ -56,6 +56,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\AttachedCommandBehavior\CommandBehavior.cs" />
+    <Compile Include="Common\AttachedCommandBehavior\CommandBehaviorBinding.cs" />
+    <Compile Include="Common\AttachedCommandBehavior\EventHandlerGenerator.cs" />
+    <Compile Include="Common\ClickBehavior.cs" />
     <Compile Include="Common\Constants.cs" />
     <Compile Include="Common\Helpers\Converters.cs" />
     <Compile Include="Common\Helpers\MouseDoubleClickBehavior.cs" />
