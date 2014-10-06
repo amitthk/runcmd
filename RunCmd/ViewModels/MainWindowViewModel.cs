@@ -2,6 +2,7 @@
 using RunCmd.Common.Messaging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,12 +16,18 @@ namespace RunCmd.ViewModels
         private readonly ICommand _OpenOptionsWinCmd;
         private readonly ICommand _exitCmd;
         private readonly ICommand _OpenLogWinCmd;
+        private readonly ICommand _MinimizeToTrayCmd;
         private IMessageBus _messageBus;
+        System.Windows.Forms.NotifyIcon ni;
+
 
 
         public ICommand OpenOptionsWinCmd { get { return (_OpenOptionsWinCmd); } }
         public ICommand ExitCmd { get { return (_exitCmd); } }
         public ICommand OpenLogWinCmd { get { return (_OpenLogWinCmd); } }
+        public ICommand MinimizeToTrayCmd { get { return(_MinimizeToTrayCmd);} }
+
+        private bool MinimizeTrayHandlerAdded = false;
 
 
         public MainWindowViewModel()
@@ -29,9 +36,39 @@ namespace RunCmd.ViewModels
             _exitCmd = new RelayCommand(ExecExit, (obj) => true);
             _OpenOptionsWinCmd = new RelayCommand(ExecOpenOptionsWinCmd, CanOpenOptionsWin);
             _OpenLogWinCmd = new RelayCommand(ExecOpenLogWinCmd, CanOpenLogWinCmd);
-
+            _MinimizeToTrayCmd = new RelayCommand(ExecMinimizeToTrayCmd, CanMinimizeToTray);
+             ni = new System.Windows.Forms.NotifyIcon();
+             var icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/Resources/Favicon.ico")).Stream);
+             ni.Icon = icon;
         }
 
+        //These methods are checked again & again in loop, so we will step through them while debugging
+        [DebuggerStepThrough]
+        private bool CanMinimizeToTray(object obj)
+        {
+            return (true);
+        }
+
+        private void ExecMinimizeToTrayCmd(object obj)
+        {
+            var win= (Window)obj;
+            ni.Visible = true;
+            if (!MinimizeTrayHandlerAdded)
+            {
+                ni.DoubleClick +=
+                    delegate(object sender, EventArgs args)
+                    {
+                        ni.Visible = false;
+                        win.Show();
+                        win.WindowState = WindowState.Normal;
+                    };
+                MinimizeTrayHandlerAdded = true;
+            }
+            win.Hide();
+        }
+
+
+        [DebuggerStepThrough]
         private bool CanOpenLogWinCmd(object obj)
         {
             return (true);
@@ -47,15 +84,19 @@ namespace RunCmd.ViewModels
             Application.Current.Shutdown();
         }
 
+        [DebuggerStepThrough]
         private bool CanOpenOptionsWin(object obj)
         {
             return (true);
         }
 
+        [DebuggerStepThrough]
         private void ExecOpenOptionsWinCmd(object obj)
         {
             var optWin = new OptionsWindow();
             optWin.ShowDialog();
         }
+
+
     }
 }

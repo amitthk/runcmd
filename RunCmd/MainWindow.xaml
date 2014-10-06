@@ -5,7 +5,10 @@
         WindowStyle="SingleBorderWindow"
         Icon="pack://application:,,,/Resources/Favicon.ico"
         xmlns:ViewModels="clr-namespace:RunCmd.ViewModels"
-        WindowState="Normal" WindowStartupLocation="CenterScreen">
+        xmlns:acb="clr-namespace:RunCmd.Common.AttachedCommandBehavior"
+        WindowState="Normal" WindowStartupLocation="CenterScreen" 
+        Name="MainWindowView">
+        <!--acb:CommandBehavior.Event="Closing" acb:CommandBehavior.Command="{Binding ElementName=MainWindowView,Path=DataContext.MinimizeToTrayCmd}" acb:CommandBehavior.CommandParameter="{Binding ElementName=MainWindowView}"-->
     <Window.DataContext>
         <ViewModels:MainWindowViewModel></ViewModels:MainWindowViewModel>
     </Window.DataContext>
@@ -22,6 +25,7 @@
                 <Menu IsMainMenu="True" Grid.Row="0" Grid.Column="0" Margin="0" Padding="5,0" Height="22" Background="White">
                     <MenuItem Header="_File" Height="22">
                         <MenuItem Header="_Exit" Command="{Binding ExitCmd}" />
+                        <MenuItem Header="Minimize To _Tray" Command="{Binding MinimizeToTrayCmd}" CommandParameter="{Binding ElementName=MainWindowView}" />
                     </MenuItem>
                     <MenuItem Header="_Options" Command="{Binding OpenOptionsWinCmd}" />
                     <MenuItem Header="_Logs" Command="{Binding OpenLogWinCmd}" />
