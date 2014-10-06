@@ -18,7 +18,7 @@ namespace RunCmd.ViewModels
         private readonly ICommand _OpenLogWinCmd;
         private readonly ICommand _MinimizeToTrayCmd;
         private IMessageBus _messageBus;
-        System.Windows.Forms.NotifyIcon ni;
+        System.Windows.Forms.NotifyIcon notifyIcon;
 
 
 
@@ -37,9 +37,15 @@ namespace RunCmd.ViewModels
             _OpenOptionsWinCmd = new RelayCommand(ExecOpenOptionsWinCmd, CanOpenOptionsWin);
             _OpenLogWinCmd = new RelayCommand(ExecOpenLogWinCmd, CanOpenLogWinCmd);
             _MinimizeToTrayCmd = new RelayCommand(ExecMinimizeToTrayCmd, CanMinimizeToTray);
-             ni = new System.Windows.Forms.NotifyIcon();
-             var icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/Resources/Favicon.ico")).Stream);
-             ni.Icon = icon;
+            setupNotifyIcon();
+        }
+
+        private void setupNotifyIcon()
+        {
+            notifyIcon = new System.Windows.Forms.NotifyIcon();
+            var icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/Resources/Favicon.ico")).Stream);
+            notifyIcon.Icon = icon;
+            notifyIcon.Text = "Double Click to Restore!";
         }
 
         //These methods are checked again & again in loop, so we will step through them while debugging
@@ -52,13 +58,13 @@ namespace RunCmd.ViewModels
         private void ExecMinimizeToTrayCmd(object obj)
         {
             var win= (Window)obj;
-            ni.Visible = true;
+            notifyIcon.Visible = true;
             if (!MinimizeTrayHandlerAdded)
             {
-                ni.DoubleClick +=
+                notifyIcon.DoubleClick +=
                     delegate(object sender, EventArgs args)
                     {
-                        ni.Visible = false;
+                        notifyIcon.Visible = false;
                         win.Show();
                         win.WindowState = WindowState.Normal;
                     };
