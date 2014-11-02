@@ -1,0 +1,39 @@
+﻿<Window x:Class="RunCmd.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="RunCmd" Height="Auto" Width="Auto"
+        WindowStyle="SingleBorderWindow"
+        Icon="pack://application:,,,/Resources/Favicon.ico"
+        xmlns:ViewModels="clr-namespace:RunCmd.ViewModels"
+        xmlns:acb="clr-namespace:RunCmd.Common.AttachedCommandBehavior"
+        WindowState="Normal" WindowStartupLocation="CenterScreen" 
+        Name="MainWindowView">
+        <!--acb:CommandBehavior.Event="Closing" acb:CommandBehavior.Command="{Binding ElementName=MainWindowView,Path=DataContext.MinimizeToTrayCmd}" acb:CommandBehavior.CommandParameter="{Binding ElementName=MainWindowView}"-->
+    <Window.DataContext>
+        <ViewModels:MainWindowViewModel></ViewModels:MainWindowViewModel>
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="26"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Name="grdMenuNav" Height="26">
+            <Border BorderBrush="Gray" BorderThickness="1">
+                <Menu IsMainMenu="True" Grid.Row="0" Grid.Column="0" Margin="0" Padding="5,0" Height="22" Background="White">
+                    <MenuItem Header="_File" Height="22">
+                        <MenuItem Header="_Exit" Command="{Binding ExitCmd}" />
+                        <MenuItem Header="Minimize To _Tray" Command="{Binding MinimizeToTrayCmd}" CommandParameter="{Binding ElementName=MainWindowView}" />
+                    </MenuItem>
+                    <MenuItem Header="_Options" Command="{Binding OpenOptionsWinCmd}" />
+                    <MenuItem Header="_Logs" Command="{Binding OpenLogWinCmd}" />
+                </Menu>
+            </Border>
+        </Grid>
+        <DockPanel Grid.Row="1" Width="Auto">
+            <Frame x:Name="_MainFrame" NavigationUIVisibility="Hidden" />
+        </DockPanel>
+    </Grid>
+</Window>
