@@ -1,0 +1,36 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:h="clr-namespace:RunCmd.Common.Helpers">
+    <Style TargetType="{x:Type CheckBox}" x:Key="chkCentered">
+        <Setter Property="VerticalAlignment" Value="Center"></Setter>
+        <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+    </Style>
+    <Style TargetType="{x:Type Button}" x:Key="buttonCentered">
+        <Setter Property="Height" Value="24"></Setter>
+        <Setter Property="VerticalAlignment" Value="Center"></Setter>
+        <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+    </Style>
+    <Style TargetType="{x:Type Button}" x:Key="pickerButtonCentered" BasedOn="{StaticResource buttonCentered}">
+        <Setter Property="Width" Value="24"></Setter>
+        <Setter Property="Content" Value="..."></Setter>
+    </Style>
+    <Style TargetType="{x:Type TextBlock}" x:Key="fadingTextBlock" >
+        <Style.Triggers>
+            <EventTrigger RoutedEvent="Binding.TargetUpdated">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                            <EasingDoubleKeyFrame KeyTime="0:0:0.15" Value="1"/>
+                            <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
+                            <EasingDoubleKeyFrame KeyTime="0:0:3" Value="0"/>
+                        </DoubleAnimationUsingKeyFrames>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Style.Triggers>
+    </Style>
+    <h:InverseBooleanConverter x:Key="inverseBooleanConverter" />
+    <h:BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
+    <h:InverseBooleanToVisibilityConverter x:Key="inverseBooleanToVisibilityConverter" />
+</ResourceDictionary>

@@ -1,0 +1,59 @@
+﻿<Window x:Class="RunCmd.OptionsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ViewModels="clr-namespace:RunCmd.ViewModels"
+        Title="Options" Height="240" Width="520" WindowStyle="SingleBorderWindow" Margin="0" Padding="0" ResizeMode="NoResize">
+    <Window.DataContext>
+        <ViewModels:OptionsWindowViewModel/>
+    </Window.DataContext>
+
+    <Border BorderBrush="Black" BorderThickness="1" Background="White">
+        <Grid Margin="5px">
+        <Grid.RowDefinitions>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="32"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"></ColumnDefinition>
+                <ColumnDefinition Width="350"></ColumnDefinition>
+                <ColumnDefinition Width="50"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="Gray" BorderThickness="0.25"></Border>
+            <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="Gray" BorderThickness="0.25"></Border>
+            <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="Gray" BorderThickness="0.25"></Border>
+            <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="Gray" BorderThickness="0.25"></Border>
+            <Border Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="Gray" BorderThickness="0.25"></Border>
+            <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="Gray" BorderThickness="0.25"></Border>
+            <Border Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="Gray" BorderThickness="0.25"></Border>
+            <Border Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="Gray" BorderThickness="0.25"></Border>
+            
+            <TextBlock Text="Options: " Grid.Column="0" FontWeight="ExtraBold" VerticalAlignment="Center"></TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding StatusMessage, NotifyOnTargetUpdated=True}" Style="{StaticResource fadingTextBlock}" Foreground="DarkOrange" FontWeight="Bold" VerticalAlignment="Center"></TextBlock>
+            
+            <TextBlock Text="Exe Path" TextWrapping="WrapWithOverflow" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="0,9" ></TextBlock>
+            <TextBlock HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" Text="{Binding ExePath}" VerticalAlignment="Center" ></TextBlock>
+            <Button Grid.Column="2" Grid.Row="1" Height="24" Width="24" Content="..." Command="{Binding ChangeExePathCmd}" Margin="13,4,13,5" ></Button>
+
+            <TextBlock Text="Saved Commands" TextWrapping="WrapWithOverflow" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="0,9"></TextBlock>
+            <TextBlock HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" Text="{Binding SavedCommandsPath}"></TextBlock>
+            <Button Grid.Column="2" Grid.Row="2" Height="24" Width="24" Content="..." Command="{Binding ChangeSavedCommandsLocCmd}" Margin="13,5,13,4"></Button>
+
+            <TextBlock Text="Save Logs?" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" Margin="0,9"></TextBlock>
+            <CheckBox IsChecked="{Binding SaveLogFiles}" Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" Margin="0,9"></CheckBox>
+
+            <TextBlock Text="Confirm before running bat File?" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="4" TextWrapping="WrapWithOverflow"></TextBlock>
+            <CheckBox IsChecked="{Binding ConfirmBeforeRun}" Grid.Column="1" Grid.Row="4" VerticalAlignment="Center" Margin="0,9"></CheckBox>
+
+            <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="3" HorizontalAlignment="Right">
+                <Button  Height="24" Width="40" Content="Reset" Command="{Binding ResetSettingsCmd}" HorizontalAlignment="Right" Margin="0,4,0,5"/>
+            </StackPanel>
+
+        </Grid>
+    </Border>
+</Window>

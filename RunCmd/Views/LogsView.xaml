@@ -1,0 +1,41 @@
+﻿<Page x:Class="RunCmd.Views.LogsView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:l="clr-namespace:RunCmd.Common.Helpers"
+      mc:Ignorable="d" DataContext="{Binding LogsView, Source={StaticResource Locator}}"
+	Title="LogsView">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"></RowDefinition>
+                <RowDefinition Height="32"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="32"></ColumnDefinition>
+                <ColumnDefinition Width="32"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button Style="{StaticResource buttonCentered}" Command="{Binding GoBackCmd}" Content="Back" Grid.Row="0" Grid.Column="0"></Button>
+            <Button Style="{StaticResource buttonCentered}" Command="{Binding DeleteLogCmd}" Content="Delete" Grid.Row="0" Grid.Column="1"></Button>
+            <Label Grid.Row="1" Grid.Column="0" Content="Logs:"></Label>
+        </Grid>
+        <ScrollViewer Grid.Column="0" Grid.Row="1" Grid.RowSpan="3">
+            <ListView Name="lstLogFiles" BorderBrush="Gray" BorderThickness="1" ItemsSource="{Binding LogFiles}" SelectedItem="{Binding SelectedLogFile}" HorizontalContentAlignment="Stretch" l:MouseDoubleClick.Command="{Binding ViewLogCmd}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding TextFileNameDisplay}" Margin="10,5" Background="Gray" TextWrapping="WrapWithOverflow"></TextBlock>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollViewer>
+    </Grid>
+</Page>
