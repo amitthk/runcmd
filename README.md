@@ -9,7 +9,7 @@ RunCmd can also be a kickstart project for most simple MVVM implementation when 
 
 The description of this project is yet to be created. This is a demo project and should not be used in production as it is.
 
-<img src="https://github.com/amitthk/runcmd/blob/master/Preview/22_sep_2014.png" width="514" height="264" alt="RunCmd_Preview_22_sep_2014.png" />
+<img src="https://github.com/amitthk/runcmd/blob/master/Preview/RunCmd_2_nov_2014.jpg" width="514" height="264" alt="RunCmd_2_nov_2014.jpg" />
 
 ToDo:
 - Ensure safe termination of started process
