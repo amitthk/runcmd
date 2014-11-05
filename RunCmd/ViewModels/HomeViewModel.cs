@@ -350,31 +350,6 @@ namespace RunCmd.ViewModels
                         "\""+SelectedBatFile.TextFileName+"\""
                     };
 
-
-
-                
-
-                //string strCmdArgs = " ";
-
-                //if (ExeFileName.Equals("cmd.exe", StringComparison.InvariantCultureIgnoreCase))
-                //{
-                //    strCmdArgs += " /C ";
-                //}
-
-                //strCmdArgs += SelectedBatFile.CmdText;
-
-                //if (!string.IsNullOrWhiteSpace(SelectedBatFile.CmdText))
-                //{
-                //    //Clean up empty new lines and insert newLines back at end of every non-empty line
-                //    List<string> cmdArgs = new List<string>(SelectedBatFile.CmdText.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries));
-                //    foreach (string cmdarg in cmdArgs)
-                //    {
-                //        strCmdArgs += cmdarg + "\r\n";
-                //    }
-                //}
-
-
-
                 _process = new Process();
                 _process.StartInfo = new ProcessStartInfo(ExeFileName)
                 {
@@ -387,6 +362,7 @@ namespace RunCmd.ViewModels
                     WorkingDirectory = Utility.getAppBasePath()
                 };
 
+                //Attach handlers to keep the UI thread updated about the process activity 
                 _process.OutputDataReceived += new DataReceivedEventHandler(SortOutputHandler);
                 _process.OutputDataReceived += new DataReceivedEventHandler((o, d) => AppendText(d.Data));
                 _process.ErrorDataReceived += new DataReceivedEventHandler((o, d) => AppendError(d.Data));
@@ -395,6 +371,7 @@ namespace RunCmd.ViewModels
 
                 TxtOutput = string.Empty; //Initialize the output first
 
+                //We start the process in a separate thread
                     ThreadStart ths = new ThreadStart(() =>
                     {
                         bool ret = _process.Start();
