@@ -66,6 +66,7 @@
     <Compile Include="Common\Messaging\EventAggregator.cs" />
     <Compile Include="Common\Messaging\IEventAggregator.cs" />
     <Compile Include="Common\Messaging\NavMessage.cs" />
+    <Compile Include="Common\RunCmdNotifyIcon.cs" />
     <Compile Include="ViewModels\BatFileViewModel.cs" />
     <Compile Include="Common\Helpers\TextBoxBehavior.cs" />
     <Compile Include="Common\Helpers\ProcessHelper.cs" />
